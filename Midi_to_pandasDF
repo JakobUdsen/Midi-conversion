@@ -1,0 +1,14 @@
+import mido
+import pandas as pd
+from mido import MidiFile
+
+def midi_to_df(midi_file):
+    mid = MidiFile(midi_file)
+    notes = []
+    for msg in mid.play():
+        if not msg.is_meta:
+            if msg.type == 'note_on':
+                notes.append([msg.note, msg.velocity, msg.time])
+    return pd.DataFrame(notes, columns=['note', 'velocity', 'time'])
+
+df = midi_to_df("example.mid")
